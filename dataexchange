@@ -1,0 +1,49 @@
+package toimiiiiiii;
+
+/**
+ * The DataExchange class represents a container for exchanging data between different components of the system.
+ * It encapsulates distance and color value data.
+ */
+public class DataExchange {
+    /** The distance value. */
+    private int distance;
+    
+    /** The color value. */
+    private double colorValue;
+
+    /**
+     * Gets the distance value.
+     *
+     * @return the distance value
+     */
+    public int getDistance() {
+        return distance;
+    }
+
+    /**
+     * Sets the distance value.
+     *
+     * @param distanceValue the new distance value
+     */
+    public void setDistance(int distanceValue) {
+        this.distance = distanceValue;
+    }
+
+    /**
+     * Gets the color value.
+     *
+     * @return the color value
+     */
+    public double getColorValue() {
+        return colorValue;
+    }
+
+    /**
+     * Sets the color value.
+     *
+     * @param colorValue the new color value
+     */
+    public void setColorValue(double colorValue) {
+        this.colorValue = colorValue;
+    }
+}
