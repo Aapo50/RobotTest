@@ -1,0 +1,29 @@
+package toimiiiiiii;
+
+import lejos.hardware.Sound;
+
+/**
+ * The PlaySong class provides a method to play a predefined song using the Lejos Sound API.
+ */
+public class PlaySong {
+    /**
+     * Plays a predefined song.
+     * This method plays a sequence of tones with specific frequencies and durations.
+     */
+    public static void song() {
+        // Define frequencies and durations for the song
+        int[] frequencies = { 329, 293, 261, 293, 329, 261, 293, 329, 440, 392, 349, 329 };
+        int[] durations = { 500, 250, 750, 500, 250, 750, 500, 500, 500, 500, 500, 1500 };
+
+        // Play each note in the song
+        for (int i = 0; i < frequencies.length; i++) {
+            Sound.playTone(frequencies[i], durations[i]);
+            try {
+                // Wait for the duration before playing the next note
+                Thread.sleep(durations[i] + 50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
