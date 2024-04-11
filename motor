@@ -1,0 +1,98 @@
+package toimiiiiiii;
+
+import lejos.hardware.lcd.LCD;
+import lejos.hardware.motor.UnregulatedMotor;
+import lejos.hardware.port.MotorPort;
+import lejos.utility.Delay;
+import lejos.utility.Stopwatch;
+
+/**
+ * The Motor class represents a component responsible for controlling motors on the robot.
+ * It implements the Runnable interface to enable concurrent execution.
+ */
+public class Motor implements Runnable {
+
+    /** The data exchange instance. */
+    private DataExchange de;
+
+    /** The left motor. */
+    private UnregulatedMotor motorA = new UnregulatedMotor(MotorPort.C);
+
+    /** The right motor. */
+    private UnregulatedMotor motorB = new UnregulatedMotor(MotorPort.D);
+
+    /** The number of completed laps. */
+    private int laps = 0;
+
+    /**
+     * Constructs a new Motor instance.
+     *
+     * @param de the data exchange object to communicate data with other components
+     */
+    public Motor(DataExchange de) {
+        this.de = de;
+    }
+
+    /**
+     * Runs the Motor thread.
+     * This method continuously monitors distance and color sensor values to control motor behavior.
+     */
+    @Override
+    public void run() {
+        Stopwatch myTimer = new Stopwatch();
+        myTimer.reset();
+
+        while (true) {
+            // Check if the required number of laps have been completed
+            if (laps >= 3) {
+                // Play a sound
+                PlaySong.song();
+                motorA.setPower(100);
+                motorB.setPower(50);
+                Delay.msDelay(1500);
+
+                // Stop motors
+                motorA.stop();
+                motorB.stop();
+
+                LCD.clear();
+                LCD.drawString("Kierros valmis", 0, 1);
+
+                // Display elapsed time
+                long elapsedTime = myTimer.elapsed();
+                long seconds = elapsedTime / 1000;
+                long minutes = seconds / 60;
+                seconds %= 60;
+
+                LCD.drawString(String.format("%02d:%02d", minutes, seconds), 0, 4);
+
+                break;
+            }
+
+            // Check if obstacle is detected and the required number of laps haven't been completed
+            if (de.getDistance() < 10 && laps < 3) {
+                // Perform maneuver to avoid obstacle and increment laps
+                // (code for maneuver omitted for brevity)
+
+                laps++;
+            }
+
+            // Adjust motor power based on color sensor value
+            if (de.getColorValue() >= 0.27) {
+                motorA.setPower(20);
+                motorB.setPower(60);
+            } else {
+                motorA.setPower(60);
+                motorB.setPower(20);
+            }
+        }
+    }
+
+    /**
+     * Stops the motors.
+     */
+    public void stop() {
+        motorA.stop();
+        motorB.stop();
+    }
+}
