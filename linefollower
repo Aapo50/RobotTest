@@ -1,0 +1,47 @@
+package toimiiiiiii;
+
+import lejos.hardware.port.SensorPort;
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.robotics.SampleProvider;
+
+/**
+ * The LineFollower class represents a component responsible for detecting lines using a color sensor.
+ * It implements the Runnable interface to enable concurrent execution.
+ */
+public class LineFollower implements Runnable {
+    /** The data exchange instance. */
+    private DataExchange de;
+
+    /** The color sensor instance. */
+    private static EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S1);
+
+    /**
+     * Constructs a new LineFollower instance.
+     *
+     * @param distanceExchange the data exchange object to communicate distance data with other components
+     */
+    public LineFollower(DataExchange distanceExchange) {
+        this.de = distanceExchange;
+    }
+
+    /**
+     * Runs the LineFollower thread.
+     * This method continuously reads the color sensor and updates the color value in the data exchange object.
+     */
+    @Override
+    public void run() {
+        while (true) {
+            // Set floodlight to enable color detection
+            colorSensor.setFloodlight(true);
+            
+            // Get color sample from the color sensor
+            final SampleProvider colorSP = colorSensor.getRedMode();
+            float[] colorSample = new float[colorSP.sampleSize()];
+            colorSP.fetchSample(colorSample, 0);
+            double colorValue = colorSample[0];
+
+            // Update color value in the data exchange object
+            de.setColorValue(colorValue);
+        }
+    }
+}
